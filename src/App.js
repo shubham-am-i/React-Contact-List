@@ -1,13 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Header from './components/Header'
 import Contacts from './components/Contacts'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<Contacts />} exact></Route>
-      </Routes>
-    </Router>
+    <>
+      <Header />
+      <Contacts />
+    </>
   )
 }
 

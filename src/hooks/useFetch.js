@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 export const useFetch = (url, method = 'GET') => {
+  // component level states
   const [data, setData] = useState(null)
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState(null)
@@ -24,6 +25,12 @@ export const useFetch = (url, method = 'GET') => {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: JSON.stringify(putData),
+    })
+  }
+
+  const deleteData = () => {
+    setOptions({
+      method: 'DELETE',
     })
   }
 
@@ -63,11 +70,14 @@ export const useFetch = (url, method = 'GET') => {
     if (method === 'PUT' && options) {
       fetchData(options)
     }
+    if (method === 'DELETE' && options) {
+      fetchData(options)
+    }
 
     return () => {
       controller.abort()
     }
   }, [url, options, method])
 
-  return { data, isPending, error, postData, putData }
+  return { data, isPending, error, postData, putData, deleteData }
 }

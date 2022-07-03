@@ -19,6 +19,7 @@ const Contacts = () => {
 
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
+    id: '',
     name: '',
     city: '',
     phone: '',
@@ -49,12 +50,20 @@ const Contacts = () => {
     document.form.reset()
   }
 
+  // delete request
+  const { deleteData, data: deleteContact } = useFetch(
+    'https://jsonplaceholder.typicode.com/posts/1',
+    'DELETE'
+  )
+  console.log(deleteContact)
+
   // edit contact handler
   const handleEditClick = (event, contact) => {
     event.preventDefault()
     setEditContactId(contact.id)
 
     const formValues = {
+      id: contact.id,
       name: contact.name,
       city: contact.address.city,
       phone: contact.phone,
@@ -77,90 +86,102 @@ const Contacts = () => {
     setEditFormData(newFormData)
   }
 
+  const handleDelete = (event, contact) => {
+    deleteData()
+    alert('Contact Deleted!!!')
+  }
+
   return (
-    <div className='contacts'>
-      <h1>My Contact List</h1>
-      {error && <p className='error'>{error}</p>}
-      {isPending && <p className='loading'>Loading...</p>}
-      {data && (
-        <form>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((contact) => (
-                <>
-                  {editContactId === contact.id ? (
-                    <EditableRow
-                      editFormData={editFormData}
-                      handleEditFormChange={handleEditFormChange}
-                    />
-                  ) : (
-                    <ReadOnlyRow contact={contact} handleEditClick={handleEditClick} />
-                  )}
-                </>
-              ))}
-            </tbody>
-          </table>
+    <Container>
+      <div className='contacts'>
+        <h3>My Contact List</h3>
+        {error && <p className='error'>{error}</p>}
+        {isPending && <p className='loading'>Loading...</p>}
+        {data && (
+          <form>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Phone Number</th>
+                  <th>Email</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((contact) => (
+                  <>
+                    {editContactId === contact.id ? (
+                      <EditableRow
+                        editFormData={editFormData}
+                        handleEditFormChange={handleEditFormChange}
+                      />
+                    ) : (
+                      <ReadOnlyRow
+                        contact={contact}
+                        handleEditClick={handleEditClick}
+                        handleDelete={handleDelete}
+                      />
+                    )}
+                  </>
+                ))}
+              </tbody>
+            </table>
+          </form>
+        )}
+
+        <h3>Add New Contact</h3>
+        <form name='form' onSubmit={handleSubmit}>
+          <input
+            type='text'
+            name='name'
+            required
+            placeholder='Enter a name'
+            onChange={(e) => setName(e.target.value)}></input>
+          <input
+            type='text'
+            name='city'
+            required
+            placeholder=' city'
+            onChange={(e) => setCity(e.target.value)}></input>
+          <input
+            type='text'
+            name='phone'
+            required
+            placeholder=' phone'
+            onChange={(e) => setPhone(e.target.value)}></input>
+          <input
+            type='email'
+            name='email'
+            required
+            placeholder=' email'
+            onChange={(e) => setEmail(e.target.value)}></input>
+          <button onClick={handleShow}>Add</button>
         </form>
-      )}
 
-      <h3>Add a Contact</h3>
-      <form name='form' onSubmit={handleSubmit}>
-        <input
-          type='text'
-          name='name'
-          required
-          placeholder='Enter a name'
-          onChange={(e) => setName(e.target.value)}></input>
-        <input
-          type='text'
-          name='city'
-          required
-          placeholder=' city'
-          onChange={(e) => setCity(e.target.value)}></input>
-        <input
-          type='text'
-          name='phone'
-          required
-          placeholder=' phone'
-          onChange={(e) => setPhone(e.target.value)}></input>
-        <input
-          type='email'
-          name='email'
-          required
-          placeholder=' email'
-          onChange={(e) => setEmail(e.target.value)}></input>
-        <button onClick={handleShow}>Add</button>
-      </form>
-
-      {contacts && (
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton className='bg-success'>
-            <Modal.Title>POST Request Successful</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>ID: {contacts.id}</p>
-            <p>Name: {contacts.name}</p>
-            <p>City: {contacts.city}</p>
-            <p>Phone: {contacts.phone}</p>
-            <p>Email: {contacts.email}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-    </div>
+        {contacts && (
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton className='bg-success'>
+              <Modal.Title>POST Request Successful</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>ID: {contacts.id}</p>
+              <p>Name: {contacts.name}</p>
+              <p>City: {contacts.city}</p>
+              <p>Phone: {contacts.phone}</p>
+              <p>Email: {contacts.email}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant='secondary' onClick={handleClose}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+      </div>
+    </Container>
   )
 }
 

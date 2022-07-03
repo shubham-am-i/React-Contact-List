@@ -27,16 +27,10 @@ const EditableRow = ({ editFormData, handleEditFormChange }) => {
     setShow(true)
   }
 
-  useEffect(() => {
-    const controller = new AbortController()
-    return () => {
-      controller.abort()
-    }
-  })
-
   return (
     <>
       <tr>
+        <td>{editFormData.id}</td>
         <td>
           <input
             type='text'

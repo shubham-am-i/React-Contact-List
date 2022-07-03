@@ -14,9 +14,20 @@ code {
 button {
   border: none;
   border-radius: 2px;
-  background-color: #75c9fa;
+  background-color: #5faad8;
   color: white;
 }
 button {
   border: none;
+}
+
+input {
+  width: 210px;
+}
+
+.delete {
+  background-color: white;
+  border: 1px solid #5faad8;
+  color: #5faad8;
+  border-radius: 2px;
 }
